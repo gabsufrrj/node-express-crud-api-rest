@@ -9,4 +9,12 @@ const read = async (PATH) => {
   }
 };
 
-module.exports = { read };
+const write = async (PATH, data) => {
+  try {
+    await fs.writeFile(PATH, data);
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+module.exports = { read, write };
