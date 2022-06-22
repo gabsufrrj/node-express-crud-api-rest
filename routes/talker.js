@@ -73,4 +73,17 @@ async (req, res) => {
   }
 });
 
+router.delete('/:id', tokenValidation, async (req, res) => {
+  const { id } = req.params;
+  const talkers = await fs.read(file);  
+
+  try {
+    const newTalkersArray = talkers.filter((e) => e.id !== Number(id));
+    await fs.write(file, JSON.stringify(newTalkersArray));
+    res.status(204).json();
+  } catch (err) {
+    console.log(err.message);
+  }  
+});
+
 module.exports = router;
