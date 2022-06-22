@@ -4,7 +4,8 @@ const {
   nameValidation,
   ageValidation,
   talkValidation,
-  rateValidation } = require('../midldleware/talkerValidation');
+  rateValidation,
+  rateValidation2 } = require('../midldleware/talkerValidation');
 
 const fs = require('../helpers/fs');
 
@@ -31,6 +32,7 @@ nameValidation,
 ageValidation,
 talkValidation,
 rateValidation,
+rateValidation2,
 async (req, res) => {
   const { name, age, talk } = req.body;
   const talkersArray = await fs.read(file);
@@ -44,6 +46,28 @@ async (req, res) => {
     const newTalkersArray = [...talkersArray, newTalker];
     await fs.write(file, JSON.stringify(newTalkersArray));
     res.status(201).json(newTalker);
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
+router.put('/:id', 
+tokenValidation,
+nameValidation,
+ageValidation,
+talkValidation,
+rateValidation,
+rateValidation2,
+async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const talkers = await fs.read(file);  
+
+  try {
+    const foundIndex = talkers.findIndex((e) => e.id === Number(id));
+    talkers[foundIndex] = { id: Number(id), name, age, talk }; 
+    await fs.write(file, JSON.stringify(talkers));
+    res.status(200).json(talkers[foundIndex]);
   } catch (err) {
     console.log(err.message);
   }
