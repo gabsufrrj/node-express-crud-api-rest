@@ -11,6 +11,22 @@ const fs = require('../helpers/fs');
 
 const file = 'talker.json';
 
+router.get('/search', tokenValidation, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await fs.read(file);
+  try {
+    if (!q) return res.status(200).json(talkers);
+    
+    const foundTalker = talkers.filter((e) => e.name.toLowerCase().includes(q.toLowerCase()));
+
+    if (foundTalker.length === 0) return res.status(200).json([]);
+    
+    return res.status(200).json(foundTalker);
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
 router.get('/', async (_req, res) => {
   const talker = await fs.read(file);
   // if (!talker) return [];
