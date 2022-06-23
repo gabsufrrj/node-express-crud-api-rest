@@ -1,4 +1,4 @@
-const router = require('express').Router();
+const talkerRouter = require('express').Router();
 const { 
   tokenValidation,
   nameValidation,
@@ -11,7 +11,7 @@ const fs = require('../helpers/fs');
 
 const file = 'talker.json';
 
-router.get('/search', tokenValidation, async (req, res) => {
+talkerRouter.get('/search', tokenValidation, async (req, res) => {
   const { q } = req.query;
   const talkers = await fs.read(file);
   try {
@@ -27,13 +27,13 @@ router.get('/search', tokenValidation, async (req, res) => {
   }
 });
 
-router.get('/', async (_req, res) => {
+talkerRouter.get('/', async (_req, res) => {
   const talker = await fs.read(file);
   // if (!talker) return [];
   return res.status(200).json(talker);
 });
 
-router.get('/:id', async (req, res) => {
+talkerRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
   const talker = await fs.read(file);
   const foundTalkerById = talker.find((e) => e.id === Number(id));
@@ -42,7 +42,7 @@ router.get('/:id', async (req, res) => {
   res.status(200).json(foundTalkerById);
   });
 
-router.post('/',
+talkerRouter.post('/',
 tokenValidation,
 nameValidation,
 ageValidation,
@@ -67,7 +67,7 @@ async (req, res) => {
   }
 });
 
-router.put('/:id', 
+talkerRouter.put('/:id', 
 tokenValidation,
 nameValidation,
 ageValidation,
@@ -89,7 +89,7 @@ async (req, res) => {
   }
 });
 
-router.delete('/:id', tokenValidation, async (req, res) => {
+talkerRouter.delete('/:id', tokenValidation, async (req, res) => {
   const { id } = req.params;
   const talkers = await fs.read(file);  
 
@@ -102,4 +102,4 @@ router.delete('/:id', tokenValidation, async (req, res) => {
   }  
 });
 
-module.exports = router;
+module.exports = talkerRouter;
